@@ -1,23 +1,25 @@
-<!-- já commitei -->
- <!-- outra..., viu -->
+<?php
+  include 'includes/header.php';
+  include 'includes/menu.php';
+?>
+
 <header class="container mt-4">
   <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner rounded shadow">
       <div class="carousel-item active">
-        <img src="assets/img/banner1.jpg" class="d-block w-100 banner-img" alt="Banner 1">
+        <img src="assents/img/banner1.jpg" class="d-block w-100" alt="Banner 1" style="height: 400px; object-fit: cover;">
       </div>
       <div class="carousel-item">
-        <img src="assets/img/banner2.jpg" class="d-block w-100 banner-img" alt="Banner 2">
+        <img src="assents/img/banner2.jpg" class="d-block w-100" alt="Banner 2" style="height: 400px; object-fit: cover;">
       </div>
       <div class="carousel-item">
-        <img src="assets/img/banner3.jpg" class="d-block w-100 banner-img" alt="Banner 3">
+        <img src="assents/img/banner3.jpg" class="d-block w-100" alt="Banner 3" style="height: 400px; object-fit: cover;">
       </div>
     </div>
 
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
       <span class="carousel-control-prev-icon"></span>
     </button>
-
     <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
       <span class="carousel-control-next-icon"></span>
     </button>
@@ -28,19 +30,19 @@
 
   <section id="servicos">
     <h2 class="text-center mb-4">Serviços Prestados</h2>
-
     <div class="row g-4">
-    
-        <div class="col-md-3">
+      
+      <div class="col-md-3">
           <article class="card shadow h-100">
             <div class="card-body">
               <h5>alterar</h5>
               <p></p>
               <p class="fw-bold text-success">R$ 350.00</p>
             </div>
-          </article>
-        </div>
-    </div>
+        </article>
+      </div>
+
+      </div>
   </section>
 
   <section id="diferenciais" class="mt-5">
@@ -85,18 +87,22 @@
     </div>
   </section>
 
-  <section id="clientes" class="mt-5">
-    <h2 class="text-center mb-4">Principais Clientes</h2>
-    <div class="row text-center">
+  <section id="clientes" class="mt-5 text-center">
+    <h2 class="mb-4">Principais Clientes</h2>
+    <div class="row">
       <div class="col-md-3">Sublime Grace Personalizados</div>
       <div class="col-md-3">Casa Dossica</div>
-      <div class="col-md-3">Tilsp Traduções e Interprtações</div>
+      <div class="col-md-3">Tilsp Traduções</div>
       <div class="col-md-3">Softkleen Informática</div>
     </div>
   </section>
 
-  <div class="text-center mt-5">
-    <a href="contratar.php" class="btn btn-lg btn-warning">Solicitar Serviço</a>
+  <div class="text-center mt-5 mb-5">
+    <a href="contratar.php" class="btn btn-lg btn-warning shadow px-5">Solicitar Serviço</a>
   </div>
 
 </main>
+
+<?php
+  include 'includes/footer.php';
+?>
