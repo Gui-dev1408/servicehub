@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 
 
 function obterPdo():PDO{
-    $host = "10.91.47.48";
+    $host = "10.91.47.38";
     $db = "servicehubdb01";
     $user = "root"; 
     $pass = "P@ssw0rd";

@@ -1,5 +1,7 @@
 <?php 
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();//iniciar a sessão ou atualizar uma sessão aberta
 
 // Evita acesso se já estiver logado
@@ -7,9 +9,7 @@ if(isset($_SESSION['usuario_id'])){
   $destino = ($_SESSION['tipo'] == 1)?"admin_dashboard.php":"cliente_dashboard.php"; // estrutura do if ternário
   header("location: $destino");
 }
-
-require "class/Usuario.php";
-
+require "classes/usuario.php";
 $msg = "";
 if($_SERVER['REQUEST_METHOD']==="POST"){
   $email = filter_input(INPUT_POST, "email",FILTER_VALIDATE_EMAIL);
@@ -36,9 +36,7 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
   }
 
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -63,10 +61,8 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
         <label>Senha</label>
         <input type="password" name="senha" class="form-control" required>
       </div>
-
       <button class="btn btn-dark w-100">Entrar</button>
     </form>
-
     <p class="text-center mt-3">
       <a href="index.php">Voltar ao site</a>
     </p>

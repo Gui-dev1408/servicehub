@@ -12,7 +12,7 @@ class Usuario{
     private $ativo;
     private $primeiro_login;
     private $pdo;
-    // construtor
+    // construtores
     public function __construct(){
        $this->pdo = obterPdo();
     }
@@ -71,5 +71,23 @@ class Usuario{
         }
     }
  
+    //Inserir
+    public function inserir():bool{
+        
+        $sql ="INSERT usuarios (nome, email, senha, tipo)
+        
+            values(:nome, :email, :senha, :tipo)";
+        $cmd = $this->pdo->prepare($sql);
+        $cmd->bindValue(":nome", $this->nome);
+        $cmd->bindValue(":email", $this->email);
+        $cmd->bindValue(":senha", password_hash($this->senha, PASSWORD_DEFAULT));
+        $cmd->bindValue(":tipo", $this->tipo);
+if ($cmd->execute()){
+        $this->id = $this->pdo->lastInsertId();
+   return true;
+    }
+      return false;  
+    }
+    
  
 }
