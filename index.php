@@ -26,15 +26,15 @@ include "includes/header.php";
     <div class="carousel-inner rounded shadow">
 
       <div class="carousel-item active">
-        <img src="assets/img/banner1.jpg" class="d-block w-100 banner-img" alt="Banner 1">
+        <img src="assents/img/banner1.jpg" class="d-block w-100 banner-img" alt="Banner 1">
       </div>
 
       <div class="carousel-item">
-        <img src="assets/img/banner2.jpg" class="d-block w-100 banner-img" alt="Banner 2">
+        <img src="assents/img/banner2.jpg" class="d-block w-100 banner-img" alt="Banner 2">
       </div>
 
       <div class="carousel-item">
-        <img src="assets/img/banner3.jpg" class="d-block w-100 banner-img" alt="Banner 3">
+        <img src="assents/img/banner3.jpg" class="d-block w-100 banner-img" alt="Banner 3">
       </div>
 
     </div>
