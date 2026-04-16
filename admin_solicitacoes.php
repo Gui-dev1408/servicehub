@@ -1,9 +1,4 @@
 
-<?php
- include 'includes/header.php';
- include 'includes/menu.php';
- 
-?>
 <main class="container mt-5">
   <h2>Solicitações</h2>
 
@@ -34,7 +29,3 @@
 
   <a href="admin_dashboard.php" class="btn btn-secondary">Voltar</a>
 </main>
-<!-- Conectar o arquivo footer php -->
-<?php
-include 'includes/footer.php';
-?>

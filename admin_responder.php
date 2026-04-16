@@ -1,8 +1,3 @@
-<?php
- include 'includes/header.php';
- include 'includes/menu.php';
- 
-?>
 
 <main class="container mt-5">
   <h2>Responder Solicitação #</h2>
@@ -32,7 +27,3 @@
 
   </form>
 </main>
-<!-- Conectar o arquivo footer php -->
-<?php
-include 'includes/footer.php';
-?>
