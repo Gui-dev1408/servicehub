@@ -9,7 +9,7 @@ if(isset($_SESSION['usuario_id'])){
   $destino = ($_SESSION['tipo'] == 1)?"admin_dashboard.php":"cliente_dashboard.php"; // estrutura do if ternário
   header("location: $destino");
 }
-require "classes/usuario.php";
+require "class/usuario.php";
 $msg = "";
 if($_SERVER['REQUEST_METHOD']==="POST"){
   $email = filter_input(INPUT_POST, "email",FILTER_VALIDATE_EMAIL);
