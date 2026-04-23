@@ -27,3 +27,4 @@ $usuario = new Usuario();
 ($usuario->buscarPorId(62));
 if($usuario->atualizarSenha("123456",PASSWORD_DEFAULT))
     echo "Senha do Usuario " .$usuario->getNome()." Atualizada com sucesso!"
+?>

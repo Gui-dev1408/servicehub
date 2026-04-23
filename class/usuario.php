@@ -148,5 +148,7 @@ public function atualizar():bool{
         $cmd = $this->pdo->prepare($sql);
         $cmd->bindValue(":senha", $senhaHash);
         $cmd->bindValue(":id", $this->id, PDO::PARAM_INT);
+         return $cmd->execute();
     }
 }
+?>

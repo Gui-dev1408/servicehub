@@ -9,6 +9,7 @@ class Cliente {
     private $cpf;
     private $pdo;
 
+    // construtor
     public function __construct(){
         $this->pdo = obterPdo();
     }
@@ -46,7 +47,7 @@ class Cliente {
         $this->cpf = $cpf;
     }
 
-    // metodo inserir
+    // inserir
     public function inserir(): bool {
         $sql = "INSERT INTO clientes (usuario_id, telefone, cpf) 
                 VALUES (:usuario_id, :telefone, :cpf)";
@@ -65,11 +66,11 @@ class Cliente {
         return false;
     }
 
-    // metodo atualizar
+    // atualizar
     public function atualizar(): bool {
         if (!$this->id) return false;
 
-        $sql = "UPDATE cliente 
+        $sql = "UPDATE clientes 
                 SET usuario_id = :usuario_id, 
                     telefone = :telefone, 
                     cpf = :cpf 
@@ -85,20 +86,26 @@ class Cliente {
         return $cmd->execute();
     }
 
-    // metodo listar
+    // excluir
+    public function excluir(): bool {
+        if (!$this->id) return false;
+
+        $sql = "DELETE FROM clientes WHERE id = :id";
+        $cmd = $this->pdo->prepare($sql);
+        $cmd->bindValue(":id", $this->id, PDO::PARAM_INT);
+
+        return $cmd->execute();
+    }
+
+    // listar todos
     public static function listar(): array {
-        $cmd = obterPdo()->query("SELECT * FROM cliente ORDER BY id DESC");
+        $cmd = obterPdo()->query("SELECT * FROM clientes ORDER BY id DESC");
         return $cmd->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // metodo listar ativos
-    public static function listarAtivos(): array {
-        $cmd = obterPdo()->query("SELECT * FROM cliente WHERE ativo = 1 ORDER BY id DESC");
-        return $cmd->fetchAll(PDO::FETCH_ASSOC);
-    }
-    // metodo buscar por id
+    // buscar por id
     public function buscarPorId(int $id): bool {
-        $sql = "SELECT * FROM cliente WHERE id = :id";
+        $sql = "SELECT * FROM clientes WHERE id = :id";
         $cmd = $this->pdo->prepare($sql);
         $cmd->bindValue(":id", $id, PDO::PARAM_INT);
         $cmd->execute();
@@ -111,24 +118,27 @@ class Cliente {
             $this->setCpf($dados['cpf']);
             return true;
         }
+
         return false;
-}
-//metodo buscar por usuario_id
-public function buscarPorUsuarioId(int $usuario_id): bool {
-    $sql = "SELECT * FROM cliente WHERE usuario_id = :usuario_id";
-    $cmd = $this->pdo->prepare($sql);
-    $cmd->bindValue(":usuario_id", $usuario_id, PDO::PARAM_INT);
-    $cmd->execute();
-
-    if ($cmd->rowCount() > 0) {
-        $dados = $cmd->fetch(PDO::FETCH_ASSOC);
-        $this->setId($dados['id']);
-        $this->setUsuarioId($dados['usuario_id']);
-        $this->setTelefone($dados['telefone']);
-        $this->setCpf($dados['cpf']);
-        return true;
     }
-    return false;
-}
 
-}?>
+    // buscar por usuario_id
+    public function buscarPorUsuarioId(int $usuario_id): bool {
+        $sql = "SELECT * FROM clientes WHERE usuario_id = :usuario_id";
+        $cmd = $this->pdo->prepare($sql);
+        $cmd->bindValue(":usuario_id", $usuario_id, PDO::PARAM_INT);
+        $cmd->execute();
+
+        if ($cmd->rowCount() > 0) {
+            $dados = $cmd->fetch(PDO::FETCH_ASSOC);
+            $this->setId($dados['id']);
+            $this->setUsuarioId($dados['usuario_id']);
+            $this->setTelefone($dados['telefone']);
+            $this->setCpf($dados['cpf']);
+            return true;
+        }
+
+        return false;
+    }
+}
+?>
