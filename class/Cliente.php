@@ -30,7 +30,12 @@ class Cliente {
     public function setUsuarioId(int $usuario_id){
         $this->usuario_id = $usuario_id;
     }
-
+    public function getClienteId(){
+        return $this->usuario_id;
+    }
+    public function setClienteId(int $usuario_id){
+        $this->usuario_id = $usuario_id;
+    }
     public function getTelefone(){
         return $this->telefone;
     }
@@ -108,6 +113,24 @@ class Cliente {
         $sql = "SELECT * FROM clientes WHERE id = :id";
         $cmd = $this->pdo->prepare($sql);
         $cmd->bindValue(":id", $id, PDO::PARAM_INT);
+        $cmd->execute();
+
+        if ($cmd->rowCount() > 0) {
+            $dados = $cmd->fetch(PDO::FETCH_ASSOC);
+            $this->setId($dados['id']);
+            $this->setUsuarioId($dados['usuario_id']);
+            $this->setTelefone($dados['telefone']);
+            $this->setCpf($dados['cpf']);
+            return true;
+        }
+
+        return false;
+    }
+    //buscar por ususario
+    public function buscarPorUsuario(int $usuario_id): bool {
+        $sql = "SELECT * FROM clientes WHERE usuario_id = :usuario_id";
+        $cmd = $this->pdo->prepare($sql);
+        $cmd->bindValue(":usuario_id", $usuario_id, PDO::PARAM_INT);
         $cmd->execute();
 
         if ($cmd->rowCount() > 0) {

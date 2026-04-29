@@ -1,8 +1,7 @@
-<?php 
-//iniciar a sessão
+<?php //iniciar a sessão
 session_start();
-var_dump(function_exists('obterPdo'));
-die();
+
+
 //inclui o arquivo de conexão com o bd
 require_once "config/conexao.php";
 
