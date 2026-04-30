@@ -82,6 +82,10 @@ if ($data_preferida ){
         exit();
     }
 }
+try{
+
+
+
 //verificar se usuario já existe 
 $usuarioBanco = new Usuario();
 if($usuarioBanco->buscarPorEmail($email)==false){
@@ -117,8 +121,8 @@ if(!$cliente->inserir()){
 $cliente_id = $cliente->getId();
 //cadastrar a solicitação:
 $solicitacao = new Solicitacao();
-$solicitacao->setCliente_Id($cliente_id);
-$solicitacao->setDescricao_Problema($descricao);
+$solicitacao->setClienteId($cliente_id);
+$solicitacao->setDescricaoProblema($descricao);
 $solicitacao->setDataPreferida($data_preferida);
 $solicitacao->setEndereco($endereco);
 if (!$solicitacao->inserir()){
@@ -126,4 +130,22 @@ if (!$solicitacao->inserir()){
     exit();
 }
 $solicitacao_id = $solicitacao->getId();
+
 //Associar os serviços a solicitação
+
+foreach ($servicos_validos as $servico_id) {
+$assoc = new ServicoSolicitacao();
+$assoc->setServicoId($servico_id);
+$assoc->setSolicitacaoId($solicitacao_id);
+if (!$assoc->associar($servico_id,$solicitacao_id)) {
+header("location: contratar.php?erro=Erro ao associar serviços à solicitação.");
+exit();
+}
+
+}
+header("location: contratar.php?success=1");
+} catch (Exception $e) {
+header("location: contratar.php?erro=Erro ao processar solicitação: " . $e->getMessage());
+exit();
+}
+

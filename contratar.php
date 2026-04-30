@@ -31,7 +31,7 @@ $erro = filter_input(INPUT_GET, "erro", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
   <form action="processa_contrato.php" method="POST" class="bg-light p-4 shadow rounded">
 
-       <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']?>">
+    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']?>">
 
     <div class="row">
 

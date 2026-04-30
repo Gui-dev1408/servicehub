@@ -16,6 +16,8 @@ include "includes/menu.php";
 <a href="logout.php" class="btn btn-danger">Sair</a>
 </main>
 
-<?php 
-include "includes/footer.php";
-?>
+
+
+
+
+
