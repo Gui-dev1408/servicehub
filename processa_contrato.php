@@ -7,145 +7,143 @@ require_once "class/Solicitacao.php";
 require_once "class/Servico.php";
 require_once "class/ServicoSolicitacao.php";
 
-if ($_SERVER['REQUEST_METHOD'] !=="POST"){
-    header("location: contratar.php?erro=Invalid Request.");
+if ($_SERVER['REQUEST_METHOD'] !== "POST"){
+    header("location: contratar.php?erro=Requisição inválida.");
     exit();
 }
 
-//verificação de segurança (se quem ta logado tem direito de carregar esta pagina)
-//csrf
-$token =$_POST ['csrf_token']??"";
-if (!$token || !isset($_SESSION['crsf_token']) || $token !== $_SESSION['csrf_token']){
-    header("location: contratar.php?erro=falha de segurança CSRF detectada");
+// Verificação de segurança CSRF
+$token = $_POST['csrf_token'] ?? "";
+// CORREÇÃO: O nome da chave na $_SESSION deve ser 'csrf_token'
+if (!$token || !isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']){
+    header("location: contratar.php?erro=Falha de segurança CSRF detectada.");
     exit();
 }
-//inputs são os capos do formulario
-$nome = filter_input(INPUT_POST,'nome', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-$email = filter_input(INPUT_POST,'email', FILTER_VALIDATE_EMAIL );
-$telefone = filter_input(INPUT_POST,'telefone', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
-$endereco = filter_input(INPUT_POST,'endereco', FILTER_UNSAFE_RAW);
-$descricao = filter_input(INPUT_POST,'descricao', FILTER_UNSAFE_RAW);
-
-$data_preferida = filter_input(INPUT_POST,'data_preferida', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-
+// Sanitização dos inputs
+$nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+$telefone = filter_input(INPUT_POST, 'telefone', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$endereco = filter_input(INPUT_POST, 'endereco', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$data_preferida = filter_input(INPUT_POST, 'data_preferida', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $cpf = preg_replace("/\D/", "", $_POST['cpf'] ?? "");
-$servicos_ids = $_POST['servicos_ids'] ?? []; //array de serviços
+$servicos_ids = $_POST['servicos_ids'] ?? [];
 
-//validação dos serviços
-if(!is_array($servicos_ids)){
-header("location: contratar.php?erro=Selecione pelo menos um serviço.");
+// Validação dos serviços
+if(!is_array($servicos_ids) || count($servicos_ids) < 1){
+    header("location: contratar.php?erro=Selecione pelo menos um serviço.");
     exit();
 }
-$servicos_validos =[];
+
+$servicos_validos = [];
 foreach($servicos_ids as $id){
-    $id = filter_var($id, FILTER_VALIDATE_INT);
-   $servicos_validos[] = $id; 
+    $id_validado = filter_var($id, FILTER_VALIDATE_INT);
+    if($id_validado) {
+        $servicos_validos[] = $id_validado; 
+    }
 }
-//validações gerais
+
+// Validações de campos obrigatórios
 if (!$nome || strlen($nome) < 3){
-    header("location: contratar.php?erro=Nome invalido.");
+    header("location: contratar.php?erro=Nome inválido.");
     exit();
 }
 if (!$email){
-    header("location: contratar.php?erro=Email invalido.");
+    header("location: contratar.php?erro=E-mail inválido.");
     exit();
 }
 if (!$telefone || strlen($telefone) < 8){
-    header("location: contratar.php?erro=Telefone invalido.");
+    header("location: contratar.php?erro=Telefone inválido.");
     exit();
 }
 if (!$endereco || strlen($endereco) < 5){
-    header("location: contratar.php?erro=Endereço invalido.");
+    header("location: contratar.php?erro=Endereço inválido.");
     exit();
 }
 if (!$descricao || strlen($descricao) < 10){
-    header("location: contratar.php?erro=Descrição do problema invalida. (Mínimo 10 caracteres).");
+    header("location: contratar.php?erro=Descrição curta demais (mínimo 10 caracteres).");
     exit();
 }
-if (!$cpf && strlen($cpf) !== 11){
-    header("location: contratar.php?erro=CPF invalido. Digite 11 numeros).");
+
+// Validação de CPF (se preenchido, deve ter 11 dígitos)
+if (!empty($cpf) && strlen($cpf) !== 11){
+    header("location: contratar.php?erro=CPF inválido. Digite os 11 números.");
     exit();
 }
-if (count($servicos_validos) < 1){
-header("location: contratar.php?erro=Selecione pelo menos um serviço valido.");
-    exit();
-}
-if ($data_preferida ){
+
+// Validação da Data
+if (!empty($data_preferida)){
     $ts = strtotime($data_preferida);
-    if (!$ts === false){
-        header("location: contratar.php?erro=Data invalida.");
+    if ($ts === false){
+        header("location: contratar.php?erro=Data em formato inválido.");
         exit();
     }
     if ($ts < strtotime(date("Y-m-d"))){
-        header("location: contratar.php?erro=A data não pode ser anterior à data atual.");
+        header("location: contratar.php?erro=A data não pode ser anterior a hoje.");
         exit();
     }
 }
-try{
 
-
-
-//verificar se usuario já existe 
-$usuarioBanco = new Usuario();
-if($usuarioBanco->buscarPorEmail($email)==false){
-
-
-$usuario = new Usuario();
-$usuario->setNome($nome);
-$usuario->setEmail($email);
-$usuario->setSenha("123456");
-$usuario->setTipo(2);
-$usuario->setAtivo(true);
-$usuario->setPrimeiroLogin(true);
-if (!$usuario->inserir()){
-    header("location: contratar.php?erro=Erro ao cadastrar o Usuário.");
-    exit();
+try {
+    // Verificar/Criar Usuário
+    $usuarioBanco = new Usuario();
+    $existeUsuario = $usuarioBanco->buscarPorEmail($email);
+    
+    if(!$existeUsuario){
+        $usuario = new Usuario();
+        $usuario->setNome($nome);
+        $usuario->setEmail($email);
+        $usuario->setSenha(password_hash("123456", PASSWORD_DEFAULT)); // Recomendado usar hash
+        $usuario->setTipo(2);
+        $usuario->setAtivo(true);
+        $usuario->setPrimeiroLogin(true);
+        
+        if (!$usuario->inserir()){
+            throw new Exception("Erro ao cadastrar o Usuário.");
+        }
+        $usuario_id = $usuario->getId();
+    } else {
+        $usuario_id = $usuarioBanco->getId();
     }
-    $usuario_id = $usuario->getId();
-}else{
-    $usuario_id = $usuarioBanco->getId();
-}
-// verificar se cliente já existe
-$cliente = new Cliente();
-if($cliente->buscarPorUsuario($usuario_id)==false){
-//gravamos o cliente
-$cliente->setUsuarioId($usuario_id);
-$cliente->setTelefone($telefone);
-$cliente->setCpf($cpf);
-if(!$cliente->inserir()){
-    header("location: contratar.php?erro=Erro ao cadastrar o Cliente.");
-    exit();
+
+    // 2. Verificar/Criar Cliente
+    $cliente = new Cliente();
+    if(!$cliente->buscarPorUsuario($usuario_id)){
+        $cliente->setUsuarioId($usuario_id);
+        $cliente->setTelefone($telefone);
+        $cliente->setCpf($cpf);
+        if(!$cliente->inserir()){
+            throw new Exception("Erro ao cadastrar o Cliente.");
+        }
     }
-}
-$cliente_id = $cliente->getId();
-//cadastrar a solicitação:
-$solicitacao = new Solicitacao();
-$solicitacao->setClienteId($cliente_id);
-$solicitacao->setDescricaoProblema($descricao);
-$solicitacao->setDataPreferida($data_preferida);
-$solicitacao->setEndereco($endereco);
-if (!$solicitacao->inserir()){
-    header("location: contratar.php?erro=Erro ao cadastrar a Solicitação.");
+    $cliente_id = $cliente->getId();
+
+    // 3. Cadastrar Solicitação
+    $solicitacao = new Solicitacao();
+    $solicitacao->setClienteId($cliente_id);
+    $solicitacao->setDescricaoProblema($descricao);
+    $solicitacao->setDataPreferida($data_preferida);
+    $solicitacao->setEndereco($endereco);
+    
+    if (!$solicitacao->inserir()){
+        throw new Exception("Erro ao cadastrar a Solicitação.");
+    }
+    $solicitacao_id = $solicitacao->getId();
+
+    // 4. Associar Serviços
+    foreach ($servicos_validos as $servico_id) {
+        $assoc = new ServicoSolicitacao();
+        if (!$assoc->associar($servico_id, $solicitacao_id)) {
+            throw new Exception("Erro ao associar serviços.");
+        }
+    }
+
+    // Sucesso: Redireciona com 'sucesso' (conforme seu HTML espera)
+    header("location: contratar.php?sucesso=1");
     exit();
-}
-$solicitacao_id = $solicitacao->getId();
 
-//Associar os serviços a solicitação
-
-foreach ($servicos_validos as $servico_id) {
-$assoc = new ServicoSolicitacao();
-$assoc->setServicoId($servico_id);
-$assoc->setSolicitacaoId($solicitacao_id);
-if (!$assoc->associar($servico_id,$solicitacao_id)) {
-header("location: contratar.php?erro=Erro ao associar serviços à solicitação.");
-exit();
-}
-
-}
-header("location: contratar.php?success=1");
 } catch (Exception $e) {
-header("location: contratar.php?erro=Erro ao processar solicitação: " . $e->getMessage());
-exit();
+    header("location: contratar.php?erro=" . urlencode($e->getMessage()));
+    exit();
 }
-

@@ -1,8 +1,8 @@
 <?php 
-if(session_status() === PHP_SESSION_NONE)
+if(session_status()===PHP_SESSION_NONE){
   session_start();
+}
 ?>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">ServiceHub</a>
@@ -22,27 +22,25 @@ if(session_status() === PHP_SESSION_NONE)
         <li class="nav-item">
           <a class="btn btn-warning ms-2" href="contratar.php">Contratar</a>
         </li>
-            <?php if (isset($_SESSION["usuario_id"])):?>
-              <?php if($_SESSION["tipo"] == 1) : ?>
+        <?php if(isset($_SESSION["usuario_id"])):?>
+          <?php if($_SESSION["tipo"]==1):?>
             <li class="nav-item">
               <a class="btn btn-outline-light ms-2" href="admin_dashboard.php">Painel Admin</a>
             </li>
-         
+          <?php else:?>
             <li class="nav-item">
               <a class="btn btn-outline-light ms-2" href="cliente_dashboard.php">Painel Cliente</a>
             </li>
-         <?php endif;?>
-
+         <?php endif; ?>
           <li class="nav-item">
             <a class="btn btn-danger ms-2" href="logout.php">Sair</a>
           </li>
-          <?php else: ?>
+        <?php else: ?>
         
           <li class="nav-item">
             <a class="btn btn-outline-light ms-2" href="login.php">Login</a>
           </li>
-
-            <?php endif;?>
+        <?php endif;?>
       </ul>
     </div>
   </div>

@@ -1,4 +1,7 @@
 <?php
+session_start();
+include_once "config/conexao.php";
+include_once "includes/funcoes.php";
  include 'includes/header.php';
  include 'includes/menu.php';   
  ?>
@@ -10,7 +13,8 @@
   <p><strong>Status:</strong> </p>
   <p><strong>Descrição:</strong> </p>
   <p><strong>Endereço:</strong> </p>
-
+<p><strong>Serviços Solicitados:</strong> </p>
+<p><strong>Descrição do Problema:</strong> </p>
  
     <div class="alert alert-info">
       <strong>Resposta do Admin:</strong><br>

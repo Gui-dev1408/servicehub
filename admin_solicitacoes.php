@@ -40,7 +40,7 @@ include "includes/menu.php";
             <?php 
               $lista = explode(", ", $s['servicos']);
               foreach($lista as $serv){
-                echo '<span class="badge bg-secondary me-1 mb-1">'.$serv.'</span>'; 
+                echo '<span class="badge bg-primary me-1 mb-1">'.$serv.'</span>'; 
               }
             ?>
           </td>
@@ -54,7 +54,7 @@ include "includes/menu.php";
     </tbody>
   </table>
 
-  <a href="admin_dashboard.php" class="btn btn-secondary">Voltar</a>
+  <a href="admin_dashboard.php" class="btn btn-danger">Voltar</a>
 </main>
 
 <?php 

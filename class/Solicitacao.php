@@ -73,14 +73,18 @@ class Solicitacao {
         return $cmd->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function listarPorCliente(int $cliente_id): array {
-        $sql = "SELECT * FROM solicitacoes WHERE cliente_id = :cliente_id ORDER BY data_cad DESC";
-        $cmd = obterPdo()->prepare($sql);
-        $cmd->bindValue(":cliente_id", $cliente_id, PDO::PARAM_INT);
-        $cmd->execute();
-        return $cmd->fetchAll(PDO::FETCH_ASSOC);
-    }
+    public function listarPorCliente(int $usuario_id) {
 
+$sql = "SELECT s.* FROM solicitacoes s
+
+INNER JOIN clientes c ON s.cliente_id = c.id
+WHERE c.usuario_id = :usuario_id
+ORDER BY s.data_cad DESC";
+ $cmd = $this->pdo->prepare($sql);
+$cmd->bindValue(":usuario_id", $usuario_id, PDO::PARAM_INT);
+$cmd->execute();
+ return $cmd->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function buscarPorId(int $id): bool {
         $sql = "SELECT * FROM solicitacoes WHERE id = :id";
         $cmd = obterPdo()->prepare($sql);
