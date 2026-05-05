@@ -9,11 +9,11 @@ require_once "class/Solicitacao.php";
 if (!isset($_SESSION['usuario_id']) || $_SESSION['tipo']!=1){
   header("Location: login.php");
   exit;
-}
+}include "includes/header.php";
+include "includes/menu.php";
 $solicitacoes = Solicitacao::listar();
 
-include "includes/header.php";
-include "includes/menu.php";
+
 ?>
 
 <main class="container mt-5">
@@ -47,7 +47,7 @@ include "includes/menu.php";
           <td><?= $s['status'] ?></td>
           <td><?= date("d/m/Y H:i", strtotime($s["data_cad"])) ?></td>
           <td>
-            <a href="admin_responder.php?id=" class="btn btn-primary btn-sm">Responder</a>
+            <a href='admin_responder.php?id= <?= $s["id"] ?>' class="btn btn-primary btn-sm">Responder</a>
           </td>
         </tr>
         <?php endforeach;?>
